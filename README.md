@@ -2,14 +2,37 @@
 ## 文創電商平台
 
 
-- customers 資料表共有 6 個欄位，分別是：cust_ID，name，sex，age，Email與 address。
+- 訂單
 
-- cust_ID 欄位是主鍵，是系統自動產生的整數。
+## 建立 sales 資料表
+```bash
+create table sales (
+    sales_ID CHAR(20) NOT NULL,
 
-- cust_ID、name、sex 與 age等欄位不允許空值，一定必須填入內容，其他兩個欄位允許空值。
+    primary key (sales_ID)
+);
+```
+
+
+- 訂單明細
+
+## 建立 sales_detail 資料表
+```bash
+create table sales_detail (
+    cust_ID CHAR(20) NOT NULL,
+ 
+    primary key (cust_ID)
+);
+```
+
+
+
+
+
+
+- 客戶資料
 
 ## 建立 customers 資料表
-
 ```bash
 create table customers (
     cust_ID CHAR(20) NOT NULL,
@@ -20,57 +43,61 @@ create table customers (
     address  CHAR(50) ,
     primary key (cust_ID)
 );
-
-
 ```
 
-- messages 資料表共有 7 個欄位，分別是：mess_ID, cust_ID, date, credit. manufacture, classify與 record。
+- 產品
 
-- mess_ID 欄位是主鍵，是系統自動產生的整數，也是個筆資料之間的唯一識別值(不允許有兩筆以上的紀錄，NO 欄位內容相同)。
+## 建立 products 資料表
+```bash
+create table products  (
+    pro_ID CHAR(20) NOT NULL,
+    name varchar(50) NOT NULL,  # 名稱
+    descr varchar(200),  # 說明
+    price INT NOT NULL,  # 價格
+    primary key(clo_ID)      # 主鍵
+);
+```
 
-- cust_ID 是外來鍵，參考到 customers 資料表的 cust_ID 欄位。
+
+
+- 銷貨商
+
+## 建立 publishers 資料表
+```bash
+create table publishers (
+    pub_ID int auto_increment, # 銷貨商編碼
+    pub_name  CHAR(50) NOT NULL,　# 出版商名稱
+    contact  CHAR(20) , # 聯絡人
+    tel  CHAR(20) , # 電話
+    address  CHAR(50) , # 地址
+    primary key (pub_ID)
+);
+```
+
+
+
+-  客戶回應訊息
+
 
 ## 建立 messages 資料表
-
 ```bash
 create table messages (
-    mess_ID  int auto_increment,
+    mess_ID  int auto_increment, 
     cust_ID  CHAR(20) NOT NULL,
-    date  DATE ,
-    credit  int ,
-    manufacture  CHAR(20) ,
+    date  DATE ,  # 留言時間
+    credit  int , # 滿意度(最多5顆星)
+    manufacture  CHAR(20) , # 製造商
     classify CHAR(20),
     record CHAR(200),
     primary key (mess_ID),
     Foreign Key (cust_ID) References customers(cust_ID)
 );
-
-
-
-
 ```
 
 
 
-------------------------------
 
-```bash
-create table car
-(cid character (10),
- model character(10),
- price integer
-);
-```
 
-```bash
-create table service
-(sid integer,
- name character (20),
- area character (6),
- tel character (16),
- addr character (50)
-);
-```
 
 
 
@@ -113,7 +140,20 @@ INSERT INTO `messages` VALUES ('13', 'A014', '2017/10/30', '4', '真美公司', 
 INSERT INTO `messages` VALUES ('14', 'A015', '2017/10/31', '5', '求美公司', '鞋子', '還好')
 INSERT INTO `messages` VALUES ('15', 'A002', '2017/11/1', '5', '真美公司', '衣服', '還好')
 INSERT INTO `messages` VALUES ('16', 'A003', '2017/11/2', '4', '真美公司', '衣服', '還好')
+
+
+INSERT INTO `clothes` VALUES ('骷髏', '棉質製成001', 990)
+
+
+
 ```
 
 http://www.tsnien.idv.tw/DataBase_WebBook/%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0%20%E5%A4%9A%E8%A1%A8%E6%A0%BC%E8%B3%87%E6%96%99%E5%BA%AB%E8%A8%AD%E8%A8%88.html
 
+
+
+http://chancayenne.blogspot.com/2015/08/sa.html
+
+
+
+https://ithelp.ithome.com.tw/articles/10184593
