@@ -1,21 +1,22 @@
 # table
-## 文創電商平台
+## 電商平台
 
 ![](https://i.imgur.com/MNvsTQM.png)
-
-
 
 - 建立 customers 資料表
 
 ## 客戶資料
 ```bash
 create table customers (
-    cust_ID CHAR(20) NOT NULL,
-    name  CHAR(20) NOT NULL, # 姓名
-    sex  CHAR(20) NOT NULL, # 性別
-    age  int  NOT NULL, # 年齡
-    Email  CHAR(50) , # 電子信箱
-    address  CHAR(50) , # 地址
+    cust_ID char(20) NOT NULL,
+    name  char(20) NOT NULL, # 姓名
+    sex  char(1) CHECK (sex IN ('男', '女')), # 性別
+    phone char(10) UNIQUE NOT NULL, # 行動電話
+    age  int CHECK (age>0 and age<=180), # 年齡
+    email  char(50) UNIQUE NOT NULL, # 電子信箱
+    address  char(50) NOT NULL, # 地址
+    
+    CONSTRAINT check_phone CHECK (phone like '09________%'),
     primary key (cust_ID)
 );
 ```
@@ -28,18 +29,17 @@ create table customers (
 ## 產品
 ```bash
 create table products  (
-    pro_ID CHAR(20) NOT NULL, 
+    pro_ID int auto_increment NOT NULL, 
     name varchar(50) NOT NULL,  # 名稱
     price int NOT NULL,  # 單價
     inventory int NOT NULL, # 庫存量
     descr varchar(200),  # 產品說明
-    added_date  date NOT NULL, # 上架時間
+    added_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP, # 上架時間
     is_on_sale boolean NOT NULL default true, # 是否上架
+    
     primary key( pro_ID)      # 主鍵
 );
 ```
-
-
 
 
 
@@ -120,43 +120,18 @@ create table sales_detail (
 
 ## 測試資料
 ```bash
-INSERT INTO `customers` VALUES ('A001', '郭大豪', '男', '20', 'A001@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 800 號')
-INSERT INTO `customers` VALUES ('A002', '張彥宏', '男', '21', 'A002@gcloud.csu.edu.tw', '台南市鳥松區澄清路 801 號')
-INSERT INTO `customers` VALUES ('A003', '林郁評', '男', '20', 'A003@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 802 號')
-INSERT INTO `customers` VALUES ('A004', '劉姵君', '女', '25', 'A004@gcloud.csu.edu.tw', '新北市鳥松區澄清路 803 號')
-INSERT INTO `customers` VALUES ('A005', '陸美女', '女', '40', 'A005@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 804 號')
-INSERT INTO `customers` VALUES ('A006', '郭大瑋', '男', '30', 'A006@gcloud.csu.edu.tw', '台中市鳥松區澄清路 805 號')
-INSERT INTO `customers` VALUES ('A007', '李真樺', '男', '20', 'A007@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 806 號')
-INSERT INTO `customers` VALUES ('A008', '陳大志', '男', '30', 'A008@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 807 號')
-INSERT INTO `customers` VALUES ('A009', '劉飛翔', '男', '20', 'A009@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 808 號')
-INSERT INTO `customers` VALUES ('A010', '郭珊姍', '女', '30', 'A010@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 809 號')
-INSERT INTO `customers` VALUES ('A011', '許真人', '男', '30', 'A011@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 810 號')
-INSERT INTO `customers` VALUES ('A012', '孫美麗', '女', '40', 'A012@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 811 號')
-INSERT INTO `customers` VALUES ('A013', '鄭明明', '女', '40', 'A013@gcloud.csu.edu.tw', '台南市鳥松區澄清路 812 號')
-INSERT INTO `customers` VALUES ('A014', '林惠容', '女', '40', 'A014@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 813 號')
-INSERT INTO `customers` VALUES ('A015', '林秀氣', '女', '20', 'A015@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 814 號')
-INSERT INTO `customers` VALUES ('A016', '陳立人', '男', '40', 'A016@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 815 號')
-INSERT INTO `customers` VALUES ('A017', '張婉瑜', '女', '20', 'A017@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 816 號')
-INSERT INTO `customers` VALUES ('A018', '郭鴻偉', '女', '18', 'A018@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 817 號')
-INSERT INTO `customers` VALUES ('A019', '林克強', '男', '40', 'A019@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 818 號')
+INSERT INTO `customers` VALUES ('A001', '郭大豪', '男','0984273123', '20', 'A001@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 800 號');
+INSERT INTO `customers` VALUES ('A002', '張彥宏', '男','0987627123', '21', 'A002@gcloud.csu.edu.tw', '台南市鳥松區澄清路 801 號');
+INSERT INTO `customers` VALUES ('A003', '林郁評', '男','0987627129', '20', 'A003@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 802 號');
+INSERT INTO `customers` VALUES ('A004', '劉姵君', '女','0987623239','25', 'A004@gcloud.csu.edu.tw', '新北市鳥松區澄清路 803 號');
+INSERT INTO `customers` VALUES ('A005', '陸美女', '女','0987627249', '40', 'A005@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 804 號');
 
 
 INSERT INTO `messages` VALUES ('1', 'A001', '2017/11/14', '3', '真美公司', '油畫', '不想留言')
 INSERT INTO `messages` VALUES ('2', 'A002', '2017/11/15', '5', '留洋公司', '耳環', '很好')
 INSERT INTO `messages` VALUES ('3', 'A001', '2017/10/20', '4', '真美公司', '帽子', '顏色不對')
 INSERT INTO `messages` VALUES ('4', 'A004', '2017/10/21', '5', '上等公司', '衣服', '還好')
-INSERT INTO `messages` VALUES ('5', 'A005', '2017/10/22', '3', '真美公司', '鞋子', '還好')
-INSERT INTO `messages` VALUES ('6', 'A003', '2017/10/23', '5', '流尚公司', '衣服', '還好')
-INSERT INTO `messages` VALUES ('7', 'A007', '2017/10/24', '2', '時尚公司', '外套', '還好')
-INSERT INTO `messages` VALUES ('8', 'A004', '2017/10/25', '4', '真美公司', '衣服', '還好留言')
-INSERT INTO `messages` VALUES ('9', 'A002', '2017/10/26', '5', '會會公司', '上衣', '還好')
-INSERT INTO `messages` VALUES ('10', 'A019', '2017/10/27', '5', '流流公司', '衣服', '真好')
-INSERT INTO `messages` VALUES ('11', 'A012', '2017/10/28', '4', '有志公司', '外套', '還好')
-INSERT INTO `messages` VALUES ('12', 'A013', '2017/10/29', '2', '美崙公司', '衣服', '還好')
-INSERT INTO `messages` VALUES ('13', 'A014', '2017/10/30', '4', '真美公司', '外套', '我的留言')
-INSERT INTO `messages` VALUES ('14', 'A015', '2017/10/31', '5', '求美公司', '鞋子', '還好')
-INSERT INTO `messages` VALUES ('15', 'A002', '2017/11/1', '5', '真美公司', '衣服', '還好')
-INSERT INTO `messages` VALUES ('16', 'A003', '2017/11/2', '4', '真美公司', '衣服', '還好')
+
 
 
 INSERT INTO `clothes` VALUES ('骷髏', '棉質製成001', 990)
@@ -175,7 +150,7 @@ http://chancayenne.blogspot.com/2015/08/sa.html
 
 https://ithelp.ithome.com.tw/articles/10184593
 
-
+https://blog.longwin.com.tw/2007/10/mysql_timestamp_properties_2007/
 
 
 - 建立 publishers 資料表
