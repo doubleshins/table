@@ -1,85 +1,82 @@
 # table
 ## 文創電商平台
 
-
-- 訂單
-
-## 建立 sales 資料表
-```bash
-create table sales (
-    sales_ID CHAR(20) NOT NULL,
-
-    primary key (sales_ID)
-);
-```
-
-
-- 訂單明細
-
-## 建立 sales_detail 資料表
-```bash
-create table sales_detail (
-    cust_ID CHAR(20) NOT NULL,
- 
-    primary key (cust_ID)
-);
-```
+![](https://i.imgur.com/MNvsTQM.png)
 
 
 
+- 建立 customers 資料表
 
-
-
-- 客戶資料
-
-## 建立 customers 資料表
+## 客戶資料
 ```bash
 create table customers (
     cust_ID CHAR(20) NOT NULL,
-    name  CHAR(20) NOT NULL,
-    sex  CHAR(20) NOT NULL,
-    age  int  NOT NULL,
-    Email  CHAR(50) ,
-    address  CHAR(50) ,
+    name  CHAR(20) NOT NULL, # 姓名
+    sex  CHAR(20) NOT NULL, # 性別
+    age  int  NOT NULL, # 年齡
+    Email  CHAR(50) , # 電子信箱
+    address  CHAR(50) , # 地址
     primary key (cust_ID)
 );
 ```
 
-- 產品
 
-## 建立 products 資料表
+
+
+- 建立 products 資料表
+
+## 產品
 ```bash
 create table products  (
-    pro_ID CHAR(20) NOT NULL,
+    pro_ID CHAR(20) NOT NULL, 
     name varchar(50) NOT NULL,  # 名稱
-    descr varchar(200),  # 說明
-    price INT NOT NULL,  # 價格
-    primary key(clo_ID)      # 主鍵
+    price int NOT NULL,  # 單價
+    inventory int NOT NULL, # 庫存量
+    descr varchar(200),  # 產品說明
+    added_date  date NOT NULL, # 上架時間
+    is_on_sale boolean NOT NULL default true, # 是否上架
+    primary key( pro_ID)      # 主鍵
 );
 ```
 
 
 
-- 銷貨商
 
-## 建立 publishers 資料表
+
+
+
+- 建立 sales 資料表
+
+## 訂單
 ```bash
-create table publishers (
-    pub_ID int auto_increment, # 銷貨商編碼
-    pub_name  CHAR(50) NOT NULL,　# 出版商名稱
-    contact  CHAR(20) , # 聯絡人
-    tel  CHAR(20) , # 電話
-    address  CHAR(50) , # 地址
-    primary key (pub_ID)
+create table sales (
+    sales_ID CHAR(20) NOT NULL,
+    cust_ID  CHAR(20) NOT NULL,
+    pro_ID CHAR(20) NOT NULL,
+    
+    ip_address  varchar(20), # IP位址
+    sales_date_time timestamp NOT NULL, # 訂單日期
+    recipient_address varchar(50), # 收件地址
+    recipient_phone varchar(10), # 收件人電話
+    recipient_remark varchar(100), # 收件備註
+   
+    
+    primary key (sales_ID),
+    FOREIGN KEY (cust_ID) REFERENCES customers(cust_ID),
+    Foreign Key (pro_ID) References products(pro_ID)
 );
 ```
 
 
 
--  客戶回應訊息
 
 
-## 建立 messages 資料表
+
+
+-  建立 messages 資料表
+
+
+## 客戶回應訊息
 ```bash
 create table messages (
     mess_ID  int auto_increment, 
@@ -87,10 +84,30 @@ create table messages (
     date  DATE ,  # 留言時間
     credit  int , # 滿意度(最多5顆星)
     manufacture  CHAR(20) , # 製造商
-    classify CHAR(20),
-    record CHAR(200),
+    pro_ID CHAR(20) NOT NULL, # 物品
+    record CHAR(200), # 留言
     primary key (mess_ID),
-    Foreign Key (cust_ID) References customers(cust_ID)
+    Foreign Key (cust_ID) References customers(cust_ID),
+    Foreign Key (pro_ID) References products(pro_ID)
+);
+```
+
+
+
+- 建立 sales_detail 資料表
+
+## 訂單明細
+```bash
+create table sales_detail (
+    sales_detail_ID  int auto_increment,
+    sales_ID CHAR(20) NOT NULL,
+
+    total_price int NOT NULL,  # 總和
+    
+    ship_status boolean NOT NULL default true, # 是否出貨
+    
+    primary key (sales_detail_ID),
+    Foreign Key (sales_ID) References  sales(sales_ID)
 );
 ```
 
@@ -124,8 +141,8 @@ INSERT INTO `customers` VALUES ('A018', '郭鴻偉', '女', '18', 'A018@gcloud.c
 INSERT INTO `customers` VALUES ('A019', '林克強', '男', '40', 'A019@gcloud.csu.edu.tw', '高雄市鳥松區澄清路 818 號')
 
 
-INSERT INTO `messages` VALUES ('1', 'A001', '2017/11/14', '3', '真美公司', '衣服', '不想留言')
-INSERT INTO `messages` VALUES ('2', 'A002', '2017/11/15', '5', '留洋公司', '褲子', '很好')
+INSERT INTO `messages` VALUES ('1', 'A001', '2017/11/14', '3', '真美公司', '油畫', '不想留言')
+INSERT INTO `messages` VALUES ('2', 'A002', '2017/11/15', '5', '留洋公司', '耳環', '很好')
 INSERT INTO `messages` VALUES ('3', 'A001', '2017/10/20', '4', '真美公司', '帽子', '顏色不對')
 INSERT INTO `messages` VALUES ('4', 'A004', '2017/10/21', '5', '上等公司', '衣服', '還好')
 INSERT INTO `messages` VALUES ('5', 'A005', '2017/10/22', '3', '真美公司', '鞋子', '還好')
@@ -157,3 +174,19 @@ http://chancayenne.blogspot.com/2015/08/sa.html
 
 
 https://ithelp.ithome.com.tw/articles/10184593
+
+
+
+
+- 建立 publishers 資料表
+## 銷貨商
+```bash
+create table publishers (
+    pub_ID int auto_increment, # 銷貨商編碼
+    pub_name  CHAR(50) NOT NULL,　# 出版商名稱
+    contact  CHAR(20) , # 聯絡人
+    tel  CHAR(20) , # 電話
+    address  CHAR(50) , # 地址
+    primary key (pub_ID)
+);
+```
