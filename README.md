@@ -140,17 +140,18 @@ INSERT INTO `clothes` VALUES ('骷髏', '棉質製成001', 990)
 
 ```
 
-http://www.tsnien.idv.tw/DataBase_WebBook/%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0%20%E5%A4%9A%E8%A1%A8%E6%A0%BC%E8%B3%87%E6%96%99%E5%BA%AB%E8%A8%AD%E8%A8%88.html
 
 
 
-http://chancayenne.blogspot.com/2015/08/sa.html
+[第十一章 多表格資料庫設計](http://www.tsnien.idv.tw/DataBase_WebBook/%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0%20%E5%A4%9A%E8%A1%A8%E6%A0%BC%E8%B3%87%E6%96%99%E5%BA%AB%E8%A8%AD%E8%A8%88.html)
+
+
+[[SA] 資料庫設計-以服飾購物網站為例](http://chancayenne.blogspot.com/2015/08/sa.html)
 
 
 
-https://ithelp.ithome.com.tw/articles/10184593
 
-https://blog.longwin.com.tw/2007/10/mysql_timestamp_properties_2007/
+[MySQL Timestamp 型態 的 屬性(新增/修改 自動更新 Timestamp型態 的 欄位)](https://blog.longwin.com.tw/2007/10/mysql_timestamp_properties_2007/)
 
 
 - 建立 publishers 資料表
