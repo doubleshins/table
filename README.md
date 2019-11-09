@@ -1,23 +1,24 @@
 # table
 ## 電商平台
-## 10.4.8-MariaDB
 
-![](https://i.imgur.com/MNvsTQM.png)
+
+![](https://i.imgur.com/uXIFp5h.png)
 
 - 建立 customers 資料表
 
 ## 客戶資料
 ```bash
 create table customers (
-    cust_ID char(20) NOT NULL,
-    name  char(20) NOT NULL, # 姓名
+    cust_ID int NOT NULL, #客戶編號
+    name  VARCHAR(30) CHECK (CHAR_LENGTH(name)>=2), # 姓名
     sex  char(1) CHECK (sex IN ('男', '女')), # 性別
-    phone char(10) UNIQUE NOT NULL, # 行動電話
-    age  int CHECK (age>0 and age<=180), # 年齡
-    email  char(50) UNIQUE NOT NULL, # 電子信箱
-    address  char(50) NOT NULL, # 地址
+    phone VARCHAR(10) UNIQUE , # 行動電話
+    age  int CHECK (age > 0), # 年齡
+    email  char(50) UNIQUE , # 電子信箱
+    address  char(50) , # 地址
+    CONSTRAINT check_phone CHECK (phone like '09________'),
+    CONSTRAINT check_email CHECK (email like '%@%'),
     
-    CONSTRAINT check_phone CHECK (phone like '09________%'),
     primary key (cust_ID)
 );
 ```
@@ -30,15 +31,16 @@ create table customers (
 ## 產品
 ```bash
 create table products  (
-    pro_ID int auto_increment NOT NULL, 
-    name varchar(50) NOT NULL,  # 名稱
-    price int NOT NULL,  # 單價
-    inventory int NOT NULL, # 庫存量
-    descr varchar(200),  # 產品說明
+    pro_ID int , #產品編號
+    name varchar(50) UNIQUE CHECK (CHAR_LENGTH(name)>=1),  #產品名稱
+    price int CHECK (price > 0),  # 單價
+    inventory int CHECK (inventory >= 0), # 庫存量
+    descr varchar(200) UNIQUE,  # 產品說明
     added_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP, # 上架時間
-    is_on_sale boolean NOT NULL default true, # 是否上架
+    end_date DATE CHECK (added_date<end_date), # 下架時間
+    is_on_sale boolean default true, # 是否上架
     
-    primary key( pro_ID)      # 主鍵
+    primary key(pro_ID)      # 主鍵
 );
 ```
 
@@ -51,20 +53,21 @@ create table products  (
 ## 訂單
 ```bash
 create table sales (
-    sales_ID CHAR(20) NOT NULL,
-    cust_ID  CHAR(20) NOT NULL,
-    pro_ID CHAR(20) NOT NULL,
-    
+    sales_ID int, #訂單編號
+    cust_ID  int, #客戶編號
     ip_address  varchar(20), # IP位址
-    sales_date_time timestamp NOT NULL, # 訂單日期
-    recipient_address varchar(50), # 收件地址
+    total_price int NOT NULL,  # 總和
+    ship_method char(4) CHECK (ship_method IN ('宅配到府', '超商取貨')), # 運送模式
+    pay_method char(4) CHECK (pay_method IN ('ATM轉帳', '貨到付款')), # 付費模式
     recipient_phone varchar(10), # 收件人電話
     recipient_remark varchar(100), # 收件備註
-   
+    sales_date_time timestamp DEFAULT CURRENT_TIMESTAMP, # 訂單日期
+    sale_status boolean default false, # 是否處理
     
     primary key (sales_ID),
-    FOREIGN KEY (cust_ID) REFERENCES customers(cust_ID),
-    Foreign Key (pro_ID) References products(pro_ID)
+    CONSTRAINT check_recipient_phone CHECK (recipient_phone like '09________'),
+    CONSTRAINT check_ip_address CHECK (ip_address like '%.%.%.%'),
+    FOREIGN KEY (cust_ID) REFERENCES customers(cust_ID)
 );
 ```
 
@@ -77,16 +80,16 @@ create table sales (
 -  建立 messages 資料表
 
 
-## 客戶回應訊息
+## 訊息資料表
 ```bash
 create table messages (
-    mess_ID  int auto_increment, 
-    cust_ID  CHAR(20) NOT NULL,
-    date  DATE ,  # 留言時間
-    credit  int , # 滿意度(最多5顆星)
-    manufacture  CHAR(20) , # 製造商
-    pro_ID CHAR(20) NOT NULL, # 物品
-    record CHAR(200), # 留言
+    mess_ID int NOT NULL, #訊息編號
+    cust_ID int NOT NULL, #客戶編號
+    date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ,  # 留言時間
+    credit  int CHECK (credit >= 0 and credit <=5), # 滿意度(最多5顆星)
+    pro_ID int, #產品編號
+    record CHAR(200), #客戶留言
+    
     primary key (mess_ID),
     Foreign Key (cust_ID) References customers(cust_ID),
     Foreign Key (pro_ID) References products(pro_ID)
@@ -100,15 +103,15 @@ create table messages (
 ## 訂單明細
 ```bash
 create table sales_detail (
-    sales_detail_ID  int auto_increment,
-    sales_ID CHAR(20) NOT NULL,
-
-    total_price int NOT NULL,  # 總和
-    
-    ship_status boolean NOT NULL default true, # 是否出貨
+    sales_detail_ID  int , #明細編號
+    sales_ID int, #訂單編號
+    pro_ID int , #產品編號
+    count int CHECK (count > 0) ,  # 數量
+    price int CHECK (price > 0),  # 總和
     
     primary key (sales_detail_ID),
-    Foreign Key (sales_ID) References  sales(sales_ID)
+    Foreign Key (sales_ID) References  sales(sales_ID),
+    Foreign Key (pro_ID) References products(pro_ID)
 );
 ```
 
@@ -153,17 +156,3 @@ INSERT INTO `clothes` VALUES ('骷髏', '棉質製成001', 990)
 
 
 [MySQL Timestamp 型態 的 屬性(新增/修改 自動更新 Timestamp型態 的 欄位)](https://blog.longwin.com.tw/2007/10/mysql_timestamp_properties_2007/)
-
-
-- 建立 publishers 資料表
-## 銷貨商
-```bash
-create table publishers (
-    pub_ID int auto_increment, # 銷貨商編碼
-    pub_name  CHAR(50) NOT NULL,　# 出版商名稱
-    contact  CHAR(20) , # 聯絡人
-    tel  CHAR(20) , # 電話
-    address  CHAR(50) , # 地址
-    primary key (pub_ID)
-);
-```
