@@ -11,7 +11,7 @@
 ```bash
 create table customers (
     cust_ID int NOT NULL, #客戶編號
-    name  VARCHAR(30) CHECK (CHAR_LENGTH(name)>=2), # 姓名
+    name  VARCHAR(30) CHECK (LENGTH(name)>=2), # 姓名
     sex  char(1) CHECK (sex IN ('男', '女')), # 性別
     phone VARCHAR(10) UNIQUE , # 行動電話
     age  int CHECK (age > 0), # 年齡
@@ -39,7 +39,7 @@ INSERT INTO customers(name, sex, phone, age, email, address) VALUES('陸美女',
 ```bash
 create table products  (
     pro_ID int NOT NULL, #產品編號
-    name varchar(50) UNIQUE CHECK (CHAR_LENGTH(name)>=1),  #產品名稱
+    name varchar(50) UNIQUE CHECK (LENGTH(name)>=1),  #產品名稱
     price int CHECK (price > 0),  # 單價
     inventory int CHECK (inventory >= 0), # 庫存量
     descr varchar(200) UNIQUE,  # 產品說明
